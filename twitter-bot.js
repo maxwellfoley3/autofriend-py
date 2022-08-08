@@ -6,6 +6,8 @@ const twitterClient = new TwitterApi(
 	config.twitter
 );
 
+console.log("Running twitter bot")
+
 axios({
 		method: 'post',
 		url: 'https://api.openai.com/v1/completions',
@@ -23,6 +25,8 @@ axios({
 	}
 ).then((res)=>{
 	const tweetText = res.data.choices[0].text;
+	console.log("Tweeting: " + tweetText);
+
 	return twitterClient.v2.tweet(tweetText);
 }).catch((err)=>{
 	console.log(err);
