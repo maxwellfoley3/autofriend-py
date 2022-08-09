@@ -7,8 +7,13 @@ const twitterClient = new TwitterApi(
 );
 
 console.log("Running twitter bot")
+setInterval(
+	tweetMilady,
+	1000 * 60 * 60 * 3
+)
 
-axios({
+function tweetMilady() {
+	axios({
 		method: 'post',
 		url: 'https://api.openai.com/v1/completions',
 		headers: {
@@ -31,3 +36,4 @@ axios({
 }).catch((err)=>{
 	console.log(err);
 })
+}
