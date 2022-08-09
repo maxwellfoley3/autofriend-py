@@ -11,10 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.27.2",
-    "http": "0.0.1-security",
-    "node-fetch": "^2.6.7",
     "random-words": "^1.2.0",
-    "twit": "^2.2.11",
-    "twitter-api-sdk": "^1.1.0"
+    "twitter-api-v2": "^1.12.3"
   }
 }
