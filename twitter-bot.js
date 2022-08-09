@@ -9,7 +9,7 @@ const twitterClient = new TwitterApi(
 console.log("Running twitter bot")
 setInterval(
 	tweetMilady,
-	1000 * 60// * 60 * 3
+	1000 * 60 * 60 * 3
 )
 
 function tweetMilady() {
