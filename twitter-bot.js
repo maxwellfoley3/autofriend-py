@@ -13,6 +13,7 @@ setInterval(
 )
 
 function tweetMilady() {
+	console.log("Sending gpt-3 request")
 	axios({
 		method: 'post',
 		url: 'https://api.openai.com/v1/completions',
