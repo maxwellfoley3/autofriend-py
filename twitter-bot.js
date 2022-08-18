@@ -1,14 +1,15 @@
 const axios = require('axios');
 const randomWords = require('random-words');
 const config = require('./config.js');
-const { TwitterApi } = require('twitter-api-v2');
-const twitterClient = new TwitterApi(
+const { ETwitterStreamEvent, TwitterApi } = require('twitter-api-v2');
+const twitterClientUserAuth = new TwitterApi(
 	config.twitter
+);
+const twitterClientAppAuth = new TwitterApi(
+	config.twitter.bearer_token
 );
 
 console.log("Running twitter bot")
-
-tweetMilady()
 
 setInterval(
 	tweetMilady,
@@ -82,23 +83,70 @@ async function tweetHasMeaningfulWords(tweet) {
 	}
 }
 
+async function getMiladyTweetText(prompt) {
+	let validTweetFound = false;
+	let tweetText = '';
+	while(!validTweetFound) {
+		const res = await generateMiladyTweet(prompt);
+		tweetText = res.data.choices[0].text;
+		console.log("Got gpt-3 response", tweetText)
+		validTweetFound = (await tweetHasCompleteSentences(tweetText)) 
+		&& (await tweetHasMeaningfulWords(tweetText));
+	}
+	return tweetText;
+}
+
 async function tweetMilady() {
 	try { 
 		console.log("Sending gpt-3 request")
-		let validTweetFound = false;
-		let tweetText = '';
-		const prompt = randomWords();
-		while(!validTweetFound) {
-			const res = await generateMiladyTweet(prompt);
-			tweetText = res.data.choices[0].text;
-			console.log("Got gpt-3 response", tweetText)
-			validTweetFound = (await tweetHasCompleteSentences(tweetText)) 
-			&& (await tweetHasMeaningfulWords(tweetText));
-		}
-
+		let tweetText = await getMiladyTweetText(randomWords())
 		console.log("Tweeting: " + tweetText);
-		return twitterClient.v2.tweet(tweetText);
+		return twitterClientUserAuth.v2.tweet(tweetText);
 	} catch (err) {
 		console.log(err);
 	}
 }
+
+/// Streaming 
+
+async function startStream(){
+	try {
+		const rules = await twitterClientAppAuth.v2.streamRules();
+
+		if (rules.data && rules.data.length) {
+			await twitterClientAppAuth.v2.updateStreamRules({
+				delete: { ids: rules.data.map(rule => rule.id) },
+			});
+		}
+
+		await twitterClientAppAuth.v2.updateStreamRules({
+			add: [
+				{ value: `to:automilady`, tag: `to automilady` },
+			],
+		})
+
+		const stream = await twitterClientAppAuth.v2.searchStream({
+			'tweet.fields': ['referenced_tweets', 'author_id'],
+			expansions: ['referenced_tweets.id'],
+		})
+
+		stream.autoReconnect = true;
+
+		stream.on(ETwitterStreamEvent.Data, async tweet => {
+			let newTweetText = await getMiladyTweetText(
+				`Reply to '${tweet.data.text}'`
+			)
+			console.log('new tweet text', newTweetText)
+			try {
+				await twitterClientUserAuth.v2.reply(
+					newTweetText, tweet.data.id)
+				} catch (err) {
+					console.log(err)
+				}
+		})
+	} catch (e) {
+		console.log(e);
+	}
+}
+
+startStream()
