@@ -8,6 +8,10 @@ const bots = [
 	new Bot('lindycannibal','curie:ft-personal:frogtwitter-2022-08-19-15-37-55', 1000 * 60 * 2),
 ]
 
+for (bot of bots) {
+	bot.start()
+}
+
 const twitterClientAppAuth = new TwitterApi(config.twitter.bearer_token)
 
 async function startStream(){
