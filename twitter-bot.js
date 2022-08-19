@@ -30,7 +30,7 @@ setInterval(
 
 setInterval(
 	tweetAngelicism,
-	123456
+	1234567
 )
 
 // quality filters
