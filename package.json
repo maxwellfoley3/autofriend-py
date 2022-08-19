@@ -11,6 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.27.2",
+    "express": "^4.18.1",
+    "node-twitter-api": "^1.8.0",
     "random-words": "^1.2.0",
     "twitter-api-v2": "^1.12.3"
   }
