@@ -1,187 +1,19 @@
-const axios = require('axios');
-const randomWords = require('random-words');
 const config = require('./config.js');
 const { ETwitterStreamEvent, TwitterApi } = require('twitter-api-v2');
+const Bot = require('./bot/bot.js')
 
-const twitterClientUserAuthMilady = new TwitterApi({
-	appKey: config.twitter.appKey,
-	appSecret: config.twitter.appSecret,
-	accessToken: config.twitter.automilady.accessToken,
-	accessSecret: config.twitter.automilady.accessSecret
-});
+const bots = [ 
+	new Bot('automilady', 'curie:ft-personal:milady-small-unsplit-stopsequence-2022-08-04-21-47-28', 1000 * 60 * 60 * 3),	
+	new Bot('angelicism_bk', 'curie:ft-personal:angelicism-2022-08-18-22-45-06', 7654321),	
+	new Bot('lindycannibal','curie:ft-personal:frogtwitter-2022-08-19-15-37-55', 1000 * 60 * 2),
+]
 
-const twitterClientUserAuthAngelicism = new TwitterApi({
-	appKey: config.twitter.appKey,
-	appSecret: config.twitter.appSecret,
-	accessToken: config.twitter.angelicism_bk.accessToken,
-	accessSecret: config.twitter.angelicism_bk.accessSecret
-});
-
-const twitterClientAppAuth = new TwitterApi(
-	config.twitter.bearer_token
-);
-
-console.log("Running twitter bot")
-
-setInterval(
-	tweetMilady,
-	1000 * 60 * 60 * 3
-)
-
-setInterval(
-	tweetAngelicism,
-	1234567
-)
-
-// quality filters
-
-async function tweetHasCompleteSentences(tweet) {
-	const res = await axios({
-		method: 'post',
-		url: 'https://api.openai.com/v1/completions',
-		headers: {
-			'Content-Type': 'application/json',
-			'Authorization': 'Bearer ' + config.openAiApiKey,
-		}, 
-		data: {
-			model: 'text-davinci-002', 
-			prompt: `Please respond 'A' if this fragment of text begins at the beginning \
-			of a sentence and ends at the end of a sentence, and 'B' if it starts in \
-			the middle of a sentence or cuts off before it reaches the end of a sentence: \
-			${tweet}`, 
-			temperature: 0, 
-			max_tokens: 54,
-		}
-	})
-	answer = res.data.choices[0].text
-	console.log('has complete sentences',answer)
-	if (answer.trim() == 'A') {
-		return true;
-	}
-}
-
-async function tweetHasMeaningfulWords(tweet) {
-	const res = await axios({
-		method: 'post',
-		url: 'https://api.openai.com/v1/completions',
-		headers: {
-			'Content-Type': 'application/json',
-			'Authorization': 'Bearer ' + config.openAiApiKey,
-		}, 
-		data: {
-			model: 'text-davinci-002', 
-			prompt: `Please respond 'A' if this fragment of text contains only meaningful \
-			words, and 'B' if it contains nonsense words: \
-			${tweet}`, 
-			temperature: 0, 
-			max_tokens: 54,
-		}
-	})
-	answer = res.data.choices[0].text
-	console.log('has nonsense words',answer)
-	if (answer.trim() == 'A') {
-		return true;
-	}
-}
-
-/// Milady
-
-async function generateMiladyTweet(prompt) {
-	return await axios({
-		method: 'post',
-		url: 'https://api.openai.com/v1/completions',
-		headers: {
-			'Content-Type': 'application/json',
-			'Authorization': 'Bearer ' + config.openAiApiKey,
-		}, 
-		data: {
-			model: 'curie:ft-personal:milady-small-unsplit-stopsequence-2022-08-04-21-47-28', 
-			prompt, 
-			temperature: .9, 
-			max_tokens: 54,
-			stop: ['###']
-		}
-	})
-}
-
-async function getMiladyTweetText(prompt) {
-	let validTweetFound = false;
-	let tweetText = '';
-	let attempts = 0;
-	while(!validTweetFound && attempts < 6) {
-		attempts++;		
-		const res = await generateMiladyTweet(prompt);
-		tweetText = res.data.choices[0].text;
-		console.log("Got gpt-3 response", tweetText)
-		validTweetFound = (await tweetHasCompleteSentences(tweetText)) 
-		&& (await tweetHasMeaningfulWords(tweetText));
-	}
-	return tweetText;
-}
-
-async function tweetMilady() {
-	try { 
-		console.log("Sending gpt-3 request")
-		let tweetText = await getMiladyTweetText(randomWords())
-		console.log("Tweeting: " + tweetText);
-		return twitterClientUserAuthMilady.v2.tweet(tweetText);
-	} catch (err) {
-		console.log(err);
-	}
-}
-
-/// Angelicism
-
-async function generateAngelicismTweet(prompt) {
-	return await axios({
-		method: 'post',
-		url: 'https://api.openai.com/v1/completions',
-		headers: {
-			'Content-Type': 'application/json',
-			'Authorization': 'Bearer ' + config.openAiApiKey,
-		}, 
-		data: {
-			model: 'curie:ft-personal:angelicism-2022-08-18-22-45-06', 
-			prompt, 
-			temperature: .9, 
-			max_tokens: 54,
-			stop: ['###']
-		}
-	})
-}
-
-async function getAngelicismTweetText(prompt) {
-	let validTweetFound = false;
-	let tweetText = '';
-	let attempts = 0;
-	while(!validTweetFound && attempts < 6) {
-		attempts++;
-		const res = await generateAngelicismTweet(prompt);
-		tweetText = res.data.choices[0].text;
-		console.log("Got gpt-3 response", tweetText)
-		validTweetFound = (await tweetHasCompleteSentences(tweetText)) 
-		&& (await tweetHasMeaningfulWords(tweetText));
-	}
-	return tweetText;
-}
-
-async function tweetAngelicism() {
-	try { 
-		console.log("Sending gpt-3 request")
-		let tweetText = await getAngelicismTweetText(randomWords()+'###')
-		console.log("Tweeting: " + tweetText);
-		return await twitterClientUserAuthAngelicism.v2.tweet(tweetText);
-	} catch (err) {
-		console.log(err);
-	}
-}
-
-/// Streaming 
+const twitterClientAppAuth = new TwitterApi(config.twitter.bearer_token)
 
 async function startStream(){
 	try {
+		// Delete old rules
 		const rules = await twitterClientAppAuth.v2.streamRules();
-
 		if (rules.data && rules.data.length) {
 			await twitterClientAppAuth.v2.updateStreamRules({
 				delete: { ids: rules.data.map(rule => rule.id) },
@@ -189,10 +21,7 @@ async function startStream(){
 		}
 
 		await twitterClientAppAuth.v2.updateStreamRules({
-			add: [
-				{ value: `to:automilady`, tag: `to automilady` },
-				{ value: `to:angelicism_bk`, tag: `to angelicism_bk` },
-			],
+			add: bots.map(bot => ({ value: `to:${bot.name}`, tag: `to:${bot.name}` }) ),
 		})
 
 		const stream = await twitterClientAppAuth.v2.searchStream({
@@ -203,26 +32,14 @@ async function startStream(){
 		stream.autoReconnect = true;
 
 		stream.on(ETwitterStreamEvent.Data, async tweet => {
-			console.log("Got tweet", tweet)	
-			let newTweetText = await getMiladyTweetText(
-				`Reply to '${tweet.data.text}'`
-			)
-			console.log('new tweet text', newTweetText)
-			if (tweet.matching_rules.find(rule => rule.tag == 'to automilady')) {
-				try {
-					await twitterClientUserAuthMilady.v2.reply(
-						newTweetText, tweet.data.id)
-					} catch (err) {
-						console.log(err)
+			console.log("Found tweet to reply to", tweet)	
+			for (rule of tweet.matching_rules) {
+				if (rule.tag.startsWith('to:')) {
+					const bot = bots.find(bot => bot.name === rule.tag.substring(3))
+					if (bot) {
+						await bot.reply(tweet.data.text, tweet.data.id)
 					}
-			}
-			if (tweet.matching_rules.find(rule => rule.tag == 'to angelicism_bk')) {
-				try {
-					await twitterClientUserAuthAngelicism.v2.reply(
-						newTweetText, tweet.data.id)
-					} catch (err) {
-						console.log(err)
-					}
+				}
 			}
 		})
 	} catch (e) {

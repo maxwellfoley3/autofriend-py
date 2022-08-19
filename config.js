@@ -19,6 +19,10 @@ module.exports = {
 		"angelicism_bk": {
 			"accessToken": "1560373803473158152-6NjgN3KmyQnY1MSIpw4TJETnTwDkx1",
 			"accessSecret": "hb72r4iXT9RAl41C2DeM4pVNuzcH3FLTeH4dB2V9pggh5"
+		},
+		"lindycannibal": {
+			"accessToken": "1560655068239642624-4aIq6WZYDKRpnKcXPRSvEqhMj7D5SL",
+			"accessSecret": "wSPHU0aY7bnbCW7SkwJooaiN8V4mTuDcWsQWKG9I7oWwC"
 		}
 	}
 }
