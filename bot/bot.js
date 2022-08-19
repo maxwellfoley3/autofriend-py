@@ -6,8 +6,6 @@ const { repeatedlyQuery } = require('./helpers.js')
 
 module.exports = class Bot {
 	name
-	accessToken
-	accessSecret
 	gpt3Model
 	tweetFrequency
 	#client
@@ -27,7 +25,7 @@ module.exports = class Bot {
 	start() {
 		this.tweet()
 		setInterval(
-			this.tweet,
+			()=>this.tweet.call(this),
 			this.tweetFrequency
 		)
 	}
@@ -39,7 +37,9 @@ module.exports = class Bot {
 			let attempts = 0;
 			while(!validTweetFound && attempts < 6) {
 				attempts++;
-				console.log('about to find tweet', this.gpt3Model)
+				console.log('about to find tweet', this, this.gpt3Model)
+				if(!this.gpt3Model) { throw " No gpt model!" }
+
 				const res = await repeatedlyQuery({
 					method: 'post',
 					url: 'https://api.openai.com/v1/completions',

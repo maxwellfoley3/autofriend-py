@@ -8,7 +8,7 @@ module.exports.repeatedlyQuery = async function(params, maxAttempts = 10) {
 		try {
 			return await axios(params)
 		} catch (err) {
-			console.log('Error in repeatedlyQuery', err)
+			console.log('Error in repeatedlyQuery', err.message)
 			if (err.message == 'Request failed with status code 500') {
 				await sleep(5000)
 			}

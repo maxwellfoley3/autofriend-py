@@ -23,6 +23,10 @@ module.exports = {
 		"lindycannibal": {
 			"accessToken": "1560655068239642624-4aIq6WZYDKRpnKcXPRSvEqhMj7D5SL",
 			"accessSecret": "wSPHU0aY7bnbCW7SkwJooaiN8V4mTuDcWsQWKG9I7oWwC"
+		},
+		"gatheringness": {
+			"accessToken": "1560743199815131137-GXRSw9e7DncaYMjFVnwtmxFSOxhMrq",
+			"accessSecret": "j2863Y1jZNdgLHJGmPamMGC655WPS68OmJD7wvDSXOlIq"
 		}
 	}
 }
