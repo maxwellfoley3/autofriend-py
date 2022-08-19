@@ -107,7 +107,9 @@ async function generateMiladyTweet(prompt) {
 async function getMiladyTweetText(prompt) {
 	let validTweetFound = false;
 	let tweetText = '';
-	while(!validTweetFound) {
+	let attempts = 0;
+	while(!validTweetFound && attempts < 6) {
+		attempts++;		
 		const res = await generateMiladyTweet(prompt);
 		tweetText = res.data.choices[0].text;
 		console.log("Got gpt-3 response", tweetText)
@@ -151,7 +153,9 @@ async function generateAngelicismTweet(prompt) {
 async function getAngelicismTweetText(prompt) {
 	let validTweetFound = false;
 	let tweetText = '';
-	while(!validTweetFound) {
+	let attempts = 0;
+	while(!validTweetFound && attempts < 6) {
+		attempts++;
 		const res = await generateAngelicismTweet(prompt);
 		tweetText = res.data.choices[0].text;
 		console.log("Got gpt-3 response", tweetText)
