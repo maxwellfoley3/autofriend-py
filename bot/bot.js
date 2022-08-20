@@ -2,13 +2,16 @@ const randomWords = require('random-words');
 const config = require('../config.js');
 const { TwitterApi } = require('twitter-api-v2');
 const { tweetHasCompleteSentences, tweetHasMeaningfulWords } = require('./quality-filters.js')
-const { repeatedlyQuery } = require('./helpers.js')	
+const { repeatedlyQuery } = require('./helpers.js')
 
+const HOURLY_LIMIT = 20;
+const ONE_HOUR = 1000 * 60 * 60;
 module.exports = class Bot {
 	name
 	gpt3Model
 	tweetFrequency
 	#client
+	#hourCount
 
 	constructor(name, gpt3Model, tweetFrequency) {
 		this.name = name
@@ -20,6 +23,7 @@ module.exports = class Bot {
 			accessSecret: config.twitter[name].accessSecret
 		})	
 		this.tweetFrequency = tweetFrequency
+		this.#hourCount = { hour: Date.now() % ONE_HOUR, count: 0 }
 	}
 
 	start() {
@@ -30,8 +34,21 @@ module.exports = class Bot {
 		)
 	}
 
+	checkAndUpdateHourCount() {
+		const now = Date.now();
+		if(now % ONE_HOUR > this.#hourCount.hour) {
+			this.#hourCount.hour = now & ONE_HOUR;
+			this.#hourCount.count = 0;
+		}
+		this.#hourCount.count++;
+		if(this.#hourCount.count > HOURLY_LIMIT) {
+			throw "Hourly limit reached!";
+		}
+	}
+
 	async tweet() {
 		try {
+			this.checkAndUpdateHourCount()
 			let validTweetFound = false;
 			let tweetText = '';
 			let attempts = 0;
@@ -68,6 +85,7 @@ module.exports = class Bot {
 	}
 
 	async reply(replyToTweetText, replyToTweetId) {
+		this.checkAndUpdateHourCount()
 		try {
 			let validTweetFound = false;
 			let tweetText = '';
