@@ -1,6 +1,7 @@
 const config = require('./config.js');
 const { ETwitterStreamEvent, TwitterApi } = require('twitter-api-v2');
 const Bot = require('./bot/bot.js')
+const DiscordBot = require('./bot/discord-bot.js')
 
 
 const bots = [ 
@@ -14,6 +15,16 @@ for (bot of bots) {
 	bot.start()
 }
 
+const discordBots = [
+	new DiscordBot('automilady', 'curie:ft-personal:milady-prompts-fixed-2022-08-19-21-58-44', 20),
+	new DiscordBot('Cornelius Kennington', 'curie:ft-personal:frogtwitter-2022-08-19-15-37-55', 20),
+	new DiscordBot('Angelicism Bangkok','curie:ft-personal:frogtwitter-2022-08-19-15-37-55', 20),
+	new DiscordBot('HIVEMIND','curie:ft-personal:hivemind-2022-08-19-21-28-10', 20)
+]
+
+for ( discordBot of discordBots ) {
+	discordBot.start()
+}
  
 const twitterClientAppAuth = new TwitterApi(config.twitter.bearer_token)
 

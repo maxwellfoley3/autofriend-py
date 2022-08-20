@@ -28,5 +28,11 @@ module.exports = {
 			"accessToken": "1560743199815131137-GXRSw9e7DncaYMjFVnwtmxFSOxhMrq",
 			"accessSecret": "j2863Y1jZNdgLHJGmPamMGC655WPS68OmJD7wvDSXOlIq"
 		}
+	},
+	"discord": {
+		"automilady": "MTAxMDYxNzg4OTA0MjIwMjcyNA.GcWC0Y.zGm3xct_YzLSpYOzt7up5bh9T_LgidO714JxWA",
+		"Cornelius Kennington": "MTAxMDYzNzI1OTY0NjcwNTc3NQ.GrsN4v.ntNYJHJ0-3nTcAvOVT4U5kiEFu6qLZPjPIZ6jg",
+		"Angelicism Bangkok": "MTAxMDY1NzUyNTg1MjU0NTAzNQ.Go9UFM.xRgsf4N2-yyLv5gngeCmH77VN2kYKsK3WEbdBw",
+		"HIVEMIND": "MTAxMDY1ODI0MTA0NDI5OTgxNg.GOBCal.-QK2UH_G_whjmdwMpIesDXnxf4W4Y1xUUrXO44"
 	}
 }

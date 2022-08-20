@@ -7,8 +7,6 @@ const { repeatedlyQuery } = require('./helpers.js')
 const HOURLY_LIMIT = 20;
 const ONE_HOUR = 1000 * 60 * 60;
 const TEN_MINUTES = 1000 * 60 * 10;
-
-const twitterClientAppAuth = new TwitterApi(config.twitter.bearer_token)
 module.exports = class Bot {
 	name
 	gpt3Model
