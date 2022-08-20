@@ -56,3 +56,9 @@ module.exports.tweetHasMeaningfulWords = async function(tweet) {
 	console.log('Tweet has nonsense words')
 	return false;
 }
+
+// Only word bad enough to explicitly blacklist for now
+// Cornelius Kennington tweeted it the other day, smh
+module.exports.tweetPassesBadWordCheck = function(tweet) {
+	return tweet.indexOf('nigger')==-1
+}
