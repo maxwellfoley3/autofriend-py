@@ -2,9 +2,9 @@
   "name": "kjv-ccru",
   "version": "1.0.0",
   "description": "",
-  "main": "twitter-bot.js",
+  "main": "main.js",
   "scripts": {
-    "start": "node twitter-bot.js",
+    "start": "node main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -14,6 +14,7 @@
     "discord.io": "^2.5.3",
     "discord.js": "^14.2.0",
     "express": "^4.18.1",
+    "mongodb": "^4.9.0",
     "node-twitter-api": "^1.8.0",
     "random-words": "^1.2.0",
     "twitter-api-v2": "^1.12.3"

@@ -1,5 +1,10 @@
 module.exports = {
 	"openAiApiKey": "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",
+	"mongo": {
+		"username": "avant-acc-project",
+		"password": "automilady!ydalimotua",
+		"uri": "mongodb+srv://avant-acc-project:automilady!ydalimotua@automilady.95zzqgr.mongodb.net/?retryWrites=true&w=majority"
+	},
 	"twitter": {
 		"appKey": "O5H1nRmWshJm5BoYb6dua1UUF",
 		"appSecret": "pXwQCmlE8tGp0XNjXFqQjgNPAPmd44DTAXWVwAIrkR9FKn4PCD",
@@ -9,8 +14,8 @@ module.exports = {
 			"accessSecret": "hEGW1ijc5WuzPVXH8Kn0Triz6m29HFbyB4oxiPSrLXy4a"	
 		},
 		"reality__gamer": {
-			"accessToken": "21537801-Fd7vEE7kNbKml1KLeaqfAuHCerAHdUaG9xUulIWZb",
-			"accessSecret": "t3xr4kAi9d6WnaquujJkeUBouNwqsX9hC7JELU8MHMGPU"
+			"accessToken": "21537801-9ML8xsHDv4ZvkK4hGGV4o0ERFk9upxdv2eASlPROw",
+			"accessSecret": "EtYPBox9O7Vg5wgaHGVmrY8nIQglR5qftQsTbdlnLvfUW"
 		},
 		"maxwellsfoley": {
 			"accessToken": "971843069359386624-F4HHPdJmCQjonk0JstvTKDqUx4dtmax",

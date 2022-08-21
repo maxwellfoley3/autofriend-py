@@ -12,14 +12,14 @@ module.exports = class Bot {
 	gpt3Model
 	tweetFrequency
 	id
-	#client
+	_client
 	#hourCount
 	followerCount 
 
 	constructor(name, gpt3Model, tweetFrequency) {
 		this.name = name
 		this.gpt3Model = gpt3Model
-		this.#client = new TwitterApi({
+		this._client = new TwitterApi({
 			appKey: config.twitter.appKey,
 			appSecret: config.twitter.appSecret,
 			accessToken: config.twitter[name].accessToken,
@@ -31,7 +31,7 @@ module.exports = class Bot {
 	}
 
 	async start() {
-		const me = (await this.#client.v2.me())
+		const me = (await this._client.v2.me())
 		this.id = me.data.id
 
 		this.tweet()
@@ -62,72 +62,50 @@ module.exports = class Bot {
 	async tweet() {
 		try {
 			this.checkAndUpdateHourCount()
-			let validTweetFound = false;
-			let tweetText = '';
-			let attempts = 0;
-			while(!validTweetFound && attempts < 6) {
-				attempts++;
-				console.log('about to find tweet', this, this.gpt3Model)
-				if(!this.gpt3Model) { throw " No gpt model!" }
-
-				const res = await repeatedlyQuery({
-					method: 'post',
-					url: 'https://api.openai.com/v1/completions',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': 'Bearer ' + config.openAiApiKey,
-					}, 
-					data: {
-						model: this.gpt3Model, 
-						prompt: randomWords()+'###', 
-						temperature: .9, 
-						max_tokens: 54,
-						stop: ['###']
-					}
-				})
-				tweetText = res.data.choices[0].text;
-				console.log("Got gpt-3 response", tweetText)
-				validTweetFound = (await tweetHasCompleteSentences(tweetText)) 
-				&& (await tweetHasMeaningfulWords(tweetText))
-				&& tweetPassesBadWordCheck(tweetText);
-			}
+			const tweetText = await this.generateResponse(randomWords()+'###')
 			console.log('Tweeting:', tweetText)
-			return await this.#client.v2.tweet(tweetText)
+			return await this._client.v2.tweet(tweetText)
 		} catch(e) {
 			console.log('Tweeting failed:', e)
 		}
 	}
 
+	async generateResponse(prompt) {	
+		let validTweetFound = false;
+		let responseText = '';
+		let attempts = 0;
+		while(!validTweetFound && attempts < 6) {
+			attempts++;
+			const res = await repeatedlyQuery({
+				method: 'post',
+				url: 'https://api.openai.com/v1/completions',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer ' + config.openAiApiKey,
+				}, 
+				data: {
+					model: this.gpt3Model, 
+					prompt,
+					temperature: .9, 
+					max_tokens: 54,
+					stop: ['###']
+				}
+			})
+			console.log("Got gpt-3 response", responseText)
+			responseText = res.data.choices[0].text;
+			validTweetFound = (await tweetHasCompleteSentences(responseText)) 
+			&& (await tweetHasMeaningfulWords(responseText))
+			&& tweetPassesBadWordCheck(responseText)
+		}
+		return responseText
+	}
+
 	async reply(replyToTweetText, replyToTweetId) {
 		this.checkAndUpdateHourCount()
 		try {
-			let validTweetFound = false;
-			let tweetText = '';
-			let attempts = 0;
-			while(!validTweetFound && attempts < 6) {
-				attempts++;
-				const res = await repeatedlyQuery({
-					method: 'post',
-					url: 'https://api.openai.com/v1/completions',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': 'Bearer ' + config.openAiApiKey,
-					}, 
-					data: {
-						model: this.gpt3Model, 
-						prompt: `Reply to "${replyToTweetText}"###`, 
-						temperature: .9, 
-						max_tokens: 54,
-						stop: ['###']
-					}
-				})
-				tweetText = res.data.choices[0].text;
-				console.log("Got gpt-3 response", tweetText)
-				validTweetFound = (await tweetHasCompleteSentences(tweetText)) 
-				&& (await tweetHasMeaningfulWords(tweetText));
-			}
+			const tweetText = await this.generateResponse(`Reply to "${replyToTweetText}"###`)
 			console.log('Replying:', tweetText)
-			return await this.#client.v2.reply(tweetText, replyToTweetId)
+			return await this._client.v2.reply(tweetText, replyToTweetId)
 		} catch(e) {
 			console.log('Tweeting failed:', e)
 		}
@@ -135,7 +113,7 @@ module.exports = class Bot {
 
 	async checkAndRespondToFollows() {
 		try { 
-			const followersPaginator = await this.#client.v2.followers(this.id, { asPaginator: true })
+			const followersPaginator = await this._client.v2.followers(this.id, { asPaginator: true })
 			let numNewFollowers = followersPaginator.meta.result_count - this.followerCount
 			console.log("Checking for new followers: ", this.name)
 
@@ -153,7 +131,7 @@ module.exports = class Bot {
 			for (let i = 0; i < numNewFollowers && i < followersPage.data.data.length; i++) {
 				const follower = followersPage.data.data[i]
 				console.log("Following: ", this.name, follower.name)
-				await this.#client.v2.follow(this.id, follower.id)
+				await this._client.v2.follow(this.id, follower.id)
 			}
 		} catch(e) {
 			console.log('Error following accounts back:', e)

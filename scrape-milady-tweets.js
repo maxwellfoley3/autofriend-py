@@ -44,7 +44,5 @@ readMiladyAccounts.on('close', async function() {
 
 	console.log(miladyAccounts.length,Array.from(miladyAccounts.length))
 	Promise.all(miladyAccountFunctions)
-
-
 })
 
