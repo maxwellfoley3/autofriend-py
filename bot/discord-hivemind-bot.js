@@ -3,6 +3,7 @@ const config = require('../config.js')
 const { repeatedlyQuery } = require('./helpers')
 
 const TEST_CHANNEL_ID = '1010978005683806269'
+const HIVE_CHANNEL_ID = '1011005608931102812'
 
 module.exports = class DiscordHivemindBot extends DiscordBot { 
 	_mongoClient
@@ -71,7 +72,8 @@ module.exports = class DiscordHivemindBot extends DiscordBot {
 	}
 
 	async onMessageCreate(message) {
-		if(message.channelId == TEST_CHANNEL_ID && message.author.username != this.name) {
+		if((message.channelId == TEST_CHANNEL_ID || message.channelId == HIVE_CHANNEL_ID)
+				&& message.author.username != this.name) {
 			if(message.content.startsWith(`!count`)) {
 				return await message.reply(`✨ ${(await this.getCountForUser(message.author.id))} ✨`)	
 			}
