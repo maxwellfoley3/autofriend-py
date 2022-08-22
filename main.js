@@ -9,11 +9,13 @@ const mongoClient = new MongoClient(config.mongo.uri)
 
 // TODO, figure out how to throw some error if mongo isn't working
  
-const bots = [ 
+
+const bots = [ /*
 	new Bot('automilady', 'curie:ft-personal:milady-prompts-fixed-2022-08-19-21-58-44', 1000 * 60 * 60 * 3),	
 	new Bot('angelicism_bk', 'curie:ft-personal:angelicism-2022-08-18-22-45-06', 1000 * 60 * 60 * 3),	
 	new Bot('lindycannibal','curie:ft-personal:frogtwitter-2022-08-19-15-37-55', 1000 * 60 * 60 * 4),
 	new HivemindBot('gatheringness','curie:ft-personal:hivemind-2022-08-19-21-28-10', 1000 * 60 * 60 * 2)
+	*/
 ]
 
 for (bot of bots) {
