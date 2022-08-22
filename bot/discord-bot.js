@@ -15,7 +15,7 @@ module.exports = class DiscordBot {
 	replyFrequency
 	#minuteCount
 
-	constructor(name, gpt3Model, replyFrequency) {
+	constructor({ name, gpt3Model, replyFrequency }) {
 		this.name = name
 		this.gpt3Model = gpt3Model
 		this.replyFrequency = replyFrequency
