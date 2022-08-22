@@ -6,6 +6,8 @@ const { repeatedlyQuery } = require('./helpers.js')
 const MINUTE_LIMIT = 3;
 const ONE_MINUTE = 1000 * 60;
 
+const HIVE_CHANNEL_ID = '1011005608931102812'
+
 module.exports = class DiscordBot {
 	_client
 	name
@@ -78,14 +80,22 @@ module.exports = class DiscordBot {
 		console.log("Message!", message.content, message.author.username, message.mentions)
 		if (message.mentions.users.has(this._client.user.id) || message.mentions.roles.has(this._client.user.id)) {
 			try {
-				await this.reply(message)
+				if (message.author.bot) {
+					// only 50/50 chance of responding to bots
+					if (Math.random()*2 < 1) {
+						await this.reply(message)
+					}
+				} 
+				else {
+					await this.reply(message)
+				}
 			} catch(e) {
 				console.log('Reply failed:', e)
 			}
 			return
 		}
 		
-		if(message.author.username != this.name) {
+		if(message.channelId == HIVE_CHANNEL_ID && message.author.username != this.name) {
 			// 1 in 20 chance
 			if(Math.random() * this.replyFrequency < 1) {
 				try {

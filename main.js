@@ -23,10 +23,10 @@ for (bot of bots) {
 }
 
 const discordBots = [
-	//new DiscordBot('automilady', 'curie:ft-personal:milady-prompts-fixed-2022-08-19-21-58-44', 20),
-	//new DiscordBot('Cornelius Kennington', 'curie:ft-personal:frogtwitter-2022-08-19-15-37-55', 20),
-	//new DiscordBot('Angelicism Bangkok','curie:ft-personal:angelicism-2022-08-18-22-45-06', 20),
-	new DiscordHivemindBot(mongoClient, 'HIVEMIND','curie:ft-personal:hivemind-2022-08-19-21-28-10', 20)
+	new DiscordBot('automilady', 'curie:ft-personal:milady-prompts-fixed-2022-08-19-21-58-44', 10),
+	new DiscordBot('Cornelius Kennington', 'curie:ft-personal:frogtwitter-2022-08-19-15-37-55', 10),
+	new DiscordBot('Angelicism Bangkok','curie:ft-personal:angelicism-2022-08-18-22-45-06', 10),
+	new DiscordHivemindBot(mongoClient, 'HIVEMIND','curie:ft-personal:hivemind-2022-08-19-21-28-10', 10)
 ]
 
 for ( discordBot of discordBots ) {
