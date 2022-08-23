@@ -1,5 +1,5 @@
 const axios = require('axios')
-const config = require('../config.js')
+const config = require('../bot-accounts-config.js')
 const { repeatedlyQuery } = require('./helpers')
 
 module.exports.tweetHasCompleteSentences = async function(tweet) {

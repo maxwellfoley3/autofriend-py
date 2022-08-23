@@ -1,5 +1,5 @@
 const DiscordBot = require('./discord-bot')
-const config = require('../config.js')
+const config = require('../bot-accounts-config.js')
 const { repeatedlyQuery, sleep } = require('./helpers')
 const process = require('process')
 const fs = require('fs')

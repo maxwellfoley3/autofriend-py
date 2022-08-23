@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const config = require('../config.js')
+const config = require('../bot-accounts-config.js')
 const { tweetHasCompleteSentences, tweetHasMeaningfulWords, tweetPassesBadWordCheck } = require('./quality-filters.js')
 const { repeatedlyQuery } = require('./helpers.js')
 

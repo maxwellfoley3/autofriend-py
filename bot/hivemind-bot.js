@@ -1,5 +1,5 @@
 const Bot = require('./twitter-bot')
-const config = require('../config.js')
+const config = require('../bot-accounts-config.js')
 const { repeatedlyQuery } = require('./helpers')
 
 module.exports = class HivemindBot extends Bot {
