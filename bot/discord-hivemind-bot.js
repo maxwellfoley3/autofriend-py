@@ -11,6 +11,7 @@ const FINETUNE_BATCH_SIZE = 100
 module.exports = class DiscordHivemindBot extends DiscordBot { 
 	_mongoClient
 	_openAiClient
+	fineTuneUpdateInProgress = false
 	constructor({mongoClient, openAiClient, ...args}) {
 		console.log('DiscordHivemindBot.constructor')
 		super({...args});
@@ -34,6 +35,7 @@ module.exports = class DiscordHivemindBot extends DiscordBot {
 
 	async fineTuneNewModel() {
 		try {
+			this.fineTuneUpdateInProgress = true
 			const mongoDatabase = this._mongoClient.db('hivemind')
 			const contributions = mongoDatabase.collection('contributions')
 			const newContributions = await contributions.find({ addedToHivemind:false })
@@ -86,6 +88,7 @@ module.exports = class DiscordHivemindBot extends DiscordBot {
 
 					// Send discord message notifying of update
 					const channel = this._client.channels.cache.get(HIVE_CHANNEL_ID)
+					this.fineTuneUpdateInProgress = false
 					channel.send(`🐝🐝🐝 HIVEMIND has updated 🐝🐝🐝`)
 					
 				} else {
@@ -96,6 +99,7 @@ module.exports = class DiscordHivemindBot extends DiscordBot {
 
 
 		} catch (e) {
+			this.fineTuneUpdateInProgress = false
 			console.log("Error", e)
 		}
 	}
@@ -144,7 +148,7 @@ module.exports = class DiscordHivemindBot extends DiscordBot {
 				// Get a count of the number of new records
 				const newContributions = await contributions.count({ addedToHivemind:false })
 				console.log("New contributions:", newContributions)
-				if (newContributions >= FINETUNE_BATCH_SIZE) {
+				if (newContributions >= FINETUNE_BATCH_SIZE && !this.fineTuneUpdateInProgress) {
 					await this.fineTuneNewModel()
 					// TODO, also finetune new classifier
 				}
