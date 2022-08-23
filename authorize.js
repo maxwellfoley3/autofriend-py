@@ -1,12 +1,12 @@
 var express = require('express');
 var app = express();
-const config = require('./config.js')
+require('dotenv').config()
 
 var twitterAPI = require('node-twitter-api');
 var twitter = new twitterAPI({
 	// application keys for your application
-    consumerKey: config.twitter.appKey,
-    consumerSecret: config.twitter.appSecret,
+    consumerKey: process.env.TWITTER_APP_KEY,
+    consumerSecret: process.env.TWITTER_APP_SECRET,
     callback: 'http://127.0.0.1:3456/auth'
 });
 
@@ -30,7 +30,6 @@ app.get('/', function(req, res){
 });
 
 app.get('/auth', function(req, res) {
-	
 	twitter.getAccessToken(requestToken, requestTokenSecret, req.query.oauth_verifier, function(error, accessToken, accessTokenSecret, results) {
 	    if (error) {
 	        res.send(error);

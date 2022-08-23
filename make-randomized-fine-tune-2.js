@@ -5,7 +5,7 @@ const readline = require('readline');
 const fs = require('fs');
 const axios = require('axios');
 const randomWords = require('random-words');
-const config = require('./config.js');
+const config = require('./bot-accounts-config.js');
 
 const readInterface = readline.createInterface({
 	input: fs.createReadStream(inFile),
@@ -28,7 +28,7 @@ async function processLine(line) {
 		url: 'https://api.openai.com/v1/completions',
 		headers: {
 			'Content-Type': 'application/json',
-			'Authorization': 'Bearer ' + config.openAiApiKey,
+			'Authorization': 'Bearer ' + process.env.OPENAI_API_KEY,
 		}, 
 		data: {
 			model: 'text-davinci-002', 

@@ -1,7 +1,6 @@
 const readline = require('readline');
 const fs = require('fs');
 const {TwitterApi} = require('twitter-api-v2');
-const config = require('./config.js')
 const readMiladyAccounts = readline.createInterface({
 	input: fs.createReadStream('milady-accounts.txt'),
 	console: false
@@ -14,7 +13,10 @@ var writeInterface = fs.createWriteStream('milady-tweets.jsonl', {
 let miladyAccounts = [];
 readMiladyAccounts.on('line', (line) => {miladyAccounts.push(line)});
 readMiladyAccounts.on('close', async function() {
-	const consumerClient = new TwitterApi(config.twitter);
+	const consumerClient = new TwitterApi({
+		appKey: process.env.TWITTER_APP_KEY,
+		appSecret: process.env.TWITTER_APP_SECRET
+	});
 	// Obtain app-only client
 	const twitterClient = await consumerClient.appLogin();
 	

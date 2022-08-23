@@ -1,5 +1,5 @@
 const randomWords = require('random-words');
-const config = require('../config.js');
+const config = require('../bot-accounts-config.js');
 const { TwitterApi } = require('twitter-api-v2');
 const { tweetHasCompleteSentences, tweetHasMeaningfulWords, tweetPassesBadWordCheck } = require('./quality-filters.js')
 const { repeatedlyQuery } = require('./helpers.js')
@@ -20,8 +20,8 @@ module.exports = class Bot {
 		this.name = name
 		this.gpt3Model = gpt3Model
 		this._client = new TwitterApi({
-			appKey: config.twitter.appKey,
-			appSecret: config.twitter.appSecret,
+			appKey: process.env.TWITTER_APP_KEY,
+			appSecret: process.env.TWITTER_APP_SECRET,
 			accessToken: config.twitter[name].accessToken,
 			accessSecret: config.twitter[name].accessSecret
 		})	
@@ -81,7 +81,7 @@ module.exports = class Bot {
 				url: 'https://api.openai.com/v1/completions',
 				headers: {
 					'Content-Type': 'application/json',
-					'Authorization': 'Bearer ' + config.openAiApiKey,
+					'Authorization': 'Bearer ' + process.env.OPENAI_API_KEY,
 				}, 
 				data: {
 					model: this.gpt3Model, 

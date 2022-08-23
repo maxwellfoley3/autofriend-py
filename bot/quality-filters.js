@@ -9,7 +9,7 @@ module.exports.tweetHasCompleteSentences = async function(tweet) {
 		url: 'https://api.openai.com/v1/completions',
 		headers: {
 			'Content-Type': 'application/json',
-			'Authorization': 'Bearer ' + config.openAiApiKey,
+			'Authorization': 'Bearer ' + process.env.OPENAI_API_KEY,
 		}, 
 		data: {
 			model: 'text-davinci-002', 
@@ -37,7 +37,7 @@ module.exports.tweetHasMeaningfulWords = async function(tweet) {
 		url: 'https://api.openai.com/v1/completions',
 		headers: {
 			'Content-Type': 'application/json',
-			'Authorization': 'Bearer ' + config.openAiApiKey,
+			'Authorization': 'Bearer ' + process.env.OPENAI_API_KEY,
 		}, 
 		data: {
 			model: 'text-davinci-002', 

@@ -110,7 +110,7 @@ module.exports = class DiscordHivemindBot extends DiscordBot {
 			url: 'https://api.openai.com/v1/completions',
 			headers: {
 				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + config.openAiApiKey,
+				'Authorization': 'Bearer ' + process.env.OPENAI_API_KEY,
 			}, 
 			data: {
 				model: `curie:ft-personal:hivemind-classifier-2022-08-20-23-42-40`, 

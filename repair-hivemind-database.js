@@ -1,6 +1,5 @@
-const config = require('./config.js')
 const { MongoClient } = require("mongodb")
-const mongoClient = new MongoClient(config.mongo.uri)
+const mongoClient = new MongoClient(process.env.MONGO_URI)
 
 async function go() {
 	const database = mongoClient.db('hivemind')

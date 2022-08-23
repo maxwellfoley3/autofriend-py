@@ -1,16 +1,15 @@
-const config = require('./config.js')
 const { ETwitterStreamEvent, TwitterApi } = require('twitter-api-v2')
 const Bot = require('./bot/twitter-bot.js')
 const HivemindBot = require('./bot/hivemind-bot.js')
 const DiscordBot = require('./bot/discord-bot.js')
 const DiscordHivemindBot = require('./bot/discord-hivemind-bot.js')
+require('dotenv').config()
 const { MongoClient } = require("mongodb")
-const mongoClient = new MongoClient(config.mongo.uri)
+const mongoClient = new MongoClient(process.env.MONGO_URI)
 
 const { Configuration, OpenAIApi } = require("openai");
-
 const configuration = new Configuration({
-  apiKey: config.openAiApiKey,
+  apiKey: process.env.OPENAI_API_KEY,
 });
 const openAiClient = new OpenAIApi(configuration);
 
@@ -48,7 +47,7 @@ async function go() {
 	}
 
 
-	const twitterClientAppAuth = new TwitterApi(config.twitter.bearer_token)
+	const twitterClientAppAuth = new TwitterApi(process.env.TWITTER_BEARER_TOKEN)
 
 	async function startStream() {
 		try {

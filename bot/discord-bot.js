@@ -47,7 +47,7 @@ module.exports = class DiscordBot {
 				url: 'https://api.openai.com/v1/completions',
 				headers: {
 					'Content-Type': 'application/json',
-					'Authorization': 'Bearer ' + config.openAiApiKey,
+					'Authorization': 'Bearer ' + process.env.OPENAI_API_KEY,
 				}, 
 				data: {
 					model: this.gpt3Model, 
