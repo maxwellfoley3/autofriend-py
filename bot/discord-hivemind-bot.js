@@ -35,8 +35,11 @@ module.exports = class DiscordHivemindBot extends DiscordBot {
 			const mongoDatabase = this._mongoClient.db('hivemind')
 			const contributions = mongoDatabase.collection('contributions')
 			const newContributions = await contributions.find({ addedToHivemind:false })
-			const filename = `${__dirname}/data/generated/hivemind-fine-tune-${Date.now()}.txt`
+			console.log('filename', filenam)
+			const filename = `data/generated/hivemind-fine-tune-${Date.now()}.txt`
 			const writeInterface = fs.createWriteStream(filename)
+			console.log('write interface created')
+
 			await newContributions.forEach(async contribution => {
 				// Strip input of user references in the form of <@userId>
 				const parsedText = contribution.text.replace(/<@.*>\s/, '')
