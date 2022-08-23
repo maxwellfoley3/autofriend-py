@@ -37,9 +37,9 @@ async function go() {
 	const hivemindBot = new DiscordHivemindBot({openAiClient, mongoClient, gpt3Model: hivemindGpt3Model, name:'HIVEMIND', replyFrequency:10})
 
 	const discordBots = [
-	//	new DiscordBot({ name:'automilady', gpt3Model:'curie:ft-personal:milady-prompts-fixed-2022-08-19-21-58-44', replyFrequency:10 }),
-	//	new DiscordBot({ name:'Cornelius Kennington', gpt3Model:'curie:ft-personal:frogtwitter-2022-08-19-15-37-55', replyFrequency:10}),
-	//	new DiscordBot({ name:'Angelicism Bangkok', gpt3Model:'curie:ft-personal:angelicism-2022-08-18-22-45-06', replyFrequency:10}),
+		new DiscordBot({ name:'automilady', gpt3Model:'curie:ft-personal:milady-prompts-fixed-2022-08-19-21-58-44', replyFrequency:10 }),
+		new DiscordBot({ name:'Cornelius Kennington', gpt3Model:'curie:ft-personal:frogtwitter-2022-08-19-15-37-55', replyFrequency:10}),
+		new DiscordBot({ name:'Angelicism Bangkok', gpt3Model:'curie:ft-personal:angelicism-2022-08-18-22-45-06', replyFrequency:10}),
 		hivemindBot
 	]
 
@@ -47,7 +47,6 @@ async function go() {
 		discordBot.start()
 	}
 
-	hivemindBot.fineTuneNewModel()
 
 	const twitterClientAppAuth = new TwitterApi(config.twitter.bearer_token)
 
