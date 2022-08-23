@@ -35,8 +35,8 @@ module.exports = class DiscordHivemindBot extends DiscordBot {
 			const mongoDatabase = this._mongoClient.db('hivemind')
 			const contributions = mongoDatabase.collection('contributions')
 			const newContributions = await contributions.find({ addedToHivemind:false })
-			console.log('filename', filename)
 			const filename = `data/generated/hivemind-fine-tune-${Date.now()}.txt`
+			console.log('filename', filename)
 			const writeInterface = fs.createWriteStream(filename)
 			console.log('write interface created')
 
