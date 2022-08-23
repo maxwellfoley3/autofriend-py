@@ -1,6 +1,7 @@
 const DiscordBot = require('./discord-bot')
 const config = require('../config.js')
 const { repeatedlyQuery, sleep } = require('./helpers')
+const process = require('process')
 const fs = require('fs')
 
 const TEST_CHANNEL_ID = '1010978005683806269'
@@ -35,7 +36,7 @@ module.exports = class DiscordHivemindBot extends DiscordBot {
 			const mongoDatabase = this._mongoClient.db('hivemind')
 			const contributions = mongoDatabase.collection('contributions')
 			const newContributions = await contributions.find({ addedToHivemind:false })
-			const filename = `./data/generated/hivemind-fine-tune-${Date.now()}.txt`
+			const filename = `${process.cwd()}/data/generated/hivemind-fine-tune-${Date.now()}.txt`
 			console.log('filename', filename)
 			const writeInterface = fs.createWriteStream(filename)
 			console.log('write interface created')
