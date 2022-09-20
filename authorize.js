@@ -41,7 +41,5 @@ app.get('/auth', function(req, res) {
 
 });
 
-
-
-
+console.log('Visit http://localhost:3456/ to start authentication');
 app.listen(3456);

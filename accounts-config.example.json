@@ -1,0 +1,51 @@
+{
+	"qualityFiltersOn": false,
+	"twitter": {
+		"automilady": {
+			"accessToken": "<insert token here>",
+			"accessSecret": "<insert token here>",
+			"gpt3Model": "curie:ft-personal:milady-prompts-fixed-2022-08-19-21-58-44",
+			"active": true,
+			"tweetFrequency": 10800000
+		},
+		"angelicism_bk": {
+			"accessToken": "<insert token here>",
+			"accessSecret": "<insert token here>",
+			"gpt3Model": "curie:ft-personal:angelicism-2022-08-18-22-45-06",
+			"active": true,
+			"tweetFrequency": 10800000
+		},
+		"reality__gamer": {
+			"accessToken": "<insert token here>",
+			"accessSecret": "<insert token here>",
+			"active": false
+		}
+	},
+	"discord": {
+		"automilady": {
+			"token": "<insert token here>",
+			"gpt3Model": "curie:ft-personal:milady-prompts-fixed-2022-08-19-21-58-44",
+			"replyFrequency": ".1",
+			"active": true
+		},
+		"Cornelius Kennington": {
+			"token": "<insert token here>",
+			"gpt3Model": "curie:ft-personal:frogtwitter-2022-08-19-15-37-55",
+			"replyFrequency": ".1",
+			"active": true
+		},
+		"Angelicism Bangkok": {
+			"token": "<insert token here>",
+			"gpt3Model": "curie:ft-personal:angelicism-2022-08-18-22-45-06",
+			"replyFrequency": ".1",
+			"active": true
+		},
+		"HIVEMIND": {
+			"extension": "DiscordHivemindBot",
+			"token": "<insert token here>",
+			"gpt3Model": "<placeholder>",
+			"replyFrequency": ".1",
+			"active": true
+		}
+	}
+}

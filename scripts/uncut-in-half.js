@@ -1,15 +1,14 @@
 const readline = require('readline');
 const fs = require('fs');
 
+const inFile = process.argv[2]
+const outFile = process.argv[3]
+
 const readInterface = readline.createInterface({
-	input: fs.createReadStream('milady-tweets-small.jsonl'),
-	output: process.stdout,
-	console: false
+	input: fs.createReadStream(inFile)
 });
 
-var writeInterface = fs.createWriteStream('milady-tweets-small-unsplit.jsonl', {
-  flags: 'a' // 'a' means appending (old data will be preserved)
-})
+const writeInterface = fs.createWriteStream(outFile)
 
 readInterface.on('line', processLine);
 
