@@ -52,7 +52,7 @@ class StableDiffuser:
 			# os.environ['STABLE_DIFFUSION_PATH'],
 			'CompVis/stable-diffusion-v1-4',
 			text_encoder=text_encoder,
-  		tokenizer=tokenizer
+  		tokenizer=tokenizer,
 			revision="fp16", 
  			torch_dtype=torch.float16,
 		)
