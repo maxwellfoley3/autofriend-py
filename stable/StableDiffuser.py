@@ -61,8 +61,9 @@ class StableDiffuser:
 			return images, False
 
 		self.pipe.safety_checker = dummy
-		
-		if os.environ['STABLE_DIFFUSION_DEVICE'] != 'cuda':
+		print("os.environ['STABLE_DIFFUSION_DEVICE']", os.environ['STABLE_DIFFUSION_DEVICE'])
+
+		if os.environ['STABLE_DIFFUSION_DEVICE'] != 'cpu':
 			self.pipe = self.pipe.to(os.environ['STABLE_DIFFUSION_DEVICE'])
 	
 	def generate(self, prompt) -> Image:
