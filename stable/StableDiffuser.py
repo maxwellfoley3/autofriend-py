@@ -49,7 +49,8 @@ class StableDiffuser:
 		load_learned_embed_in_clip(os.path.join(os.getcwd(), 'data/harmless_ai_style_learned_embeds.bin'), text_encoder, tokenizer, BEE_STYLE_EMBED)
 		
 		self.pipe = StableDiffusionPipeline.from_pretrained(
-			os.environ['STABLE_DIFFUSION_PATH'],
+			# os.environ['STABLE_DIFFUSION_PATH'],
+			'CompVis/stable-diffusion-v1-4',
 			text_encoder=text_encoder,
   		tokenizer=tokenizer
 		)
@@ -64,4 +65,8 @@ class StableDiffuser:
 	
 	def generate(self, prompt) -> Image:
 		print('Generating...', prompt)
-		return self.pipe(prompt=prompt, num_inference_steps=30)["sample"][0]
+		if(os.environ['STABLE_DIFFUSION_DEVICE'] == 'cuda'):
+			with torch.autocast('cuda'):
+				return self.pipe(prompt=prompt, num_inference_steps=30)["sample"][0]
+		else:
+			return self.pipe(prompt=prompt, num_inference_steps=30)["sample"][0]
