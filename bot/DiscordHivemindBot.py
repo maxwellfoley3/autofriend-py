@@ -1,11 +1,13 @@
 from bot.DiscordBot import DiscordBot
 from bot.Utility import repeatedly_query
+from stable.StableDiffuser import StableDiffuser, BEE_STYLE_EMBED
 import os
 from os.path import abspath
 import asyncio
 import time
 import json
 import re
+import discord
 from pymongo import MongoClient
 
 
@@ -18,12 +20,14 @@ CURRENT_CLASSIFIER_MODEL = f'curie:ft-personal:hivemind-classifier-2022-08-20-23
 
 class DiscordHivemindBot(DiscordBot):
 	_mongo_client = None
+	_stable_diffuser = None
 	fine_tune_update_in_progress = False
 
 	def __init__(self, **kwargs):
 		kwargs['gpt_3_model'] = '<placeholder>' # satisfy the super class while we get our own gpt3 model from database
 		super().__init__(**kwargs)
 		self._mongo_client = MongoClient(os.environ['MONGO_URI'])
+		self._stable_diffuser = StableDiffuser()
 		self.get_current_model()
 
 	def start(self, loop):
@@ -46,10 +50,25 @@ class DiscordHivemindBot(DiscordBot):
 	# Post in the hive channel every ten minutes
 	async def post_regularly_in_hive(self):
 		while (True):
-			print('Posting in hive channel')
-			new_message = await self.generate_response('###')
-			channel = self._discord_client.get_channel(HIVE_CHANNEL_ID)
-			await channel.send(new_message)
+			try:
+				print('Posting in hive channel')
+				new_message = await self.generate_response('###')
+
+				image = self._stable_diffuser.generate(new_message + ', ' + BEE_STYLE_EMBED)
+
+				if not os.path.exists(os.path.join(os.getcwd(), 'images')):
+					os.mkdir(os.path.join(os.getcwd(), 'images'))
+				
+				image_path = os.path.join(os.getcwd(), 'images', str(time.time()) + '.png')
+				print('image path', image_path)
+				image.save(image_path)
+				
+				
+				channel = self._discord_client.get_channel(HIVE_CHANNEL_ID)
+				await channel.send(new_message, file=discord.File(image_path))
+			except Exception as e:
+				print('An error occured in post_regularly_in_hive', e)
+			
 			await asyncio.sleep(TEN_MINUTES)
 
 	# Fine-tune the model with the new contributions

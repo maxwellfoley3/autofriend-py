@@ -3,3 +3,4 @@ data/generated
 .env
 accounts-config.json
 bot/__pycache__
+images
