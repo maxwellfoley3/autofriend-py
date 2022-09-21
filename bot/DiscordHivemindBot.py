@@ -54,7 +54,7 @@ class DiscordHivemindBot(DiscordBot):
 				print('Posting in hive channel')
 				new_message = await self.generate_response('###')
 
-				image = self._stable_diffuser.generate(BEE_STYLE_EMBED)
+				image = self._stable_diffuser.generate(BEE_STYLE_EMBED + ", " + new_message)
 
 				if not os.path.exists(os.path.join(os.getcwd(), 'images')):
 					os.mkdir(os.path.join(os.getcwd(), 'images'))
