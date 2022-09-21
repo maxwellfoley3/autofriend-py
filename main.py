@@ -66,24 +66,11 @@ def start_bots(loop):
 				reply_frequency=bot['replyFrequency'],
 				loop=loop
 			))
-	
-	# twitter_bots = [
-	# 	TwitterBot(open_ai_client=openai, name='automilady', gpt_3_model='curie:ft-personal:milady-prompts-fixed-2022-08-19-21-58-44', tweet_frequency=10800000),	
-	# 	TwitterBot(open_ai_client=openai, name='angelicism_bk', gpt_3_model='curie:ft-personal:angelicism-2022-08-18-22-45-06', tweet_frequency=10800000)
-	# ]
+		asyncio.set_event_loop(loop)
 
-	# discord_bots = [
-	# 	DiscordBot(open_ai_client=openai, name='automilady', gpt_3_model='curie:ft-personal:milady-prompts-fixed-2022-08-19-21-58-44', reply_frequency=10),
-	# 	DiscordBot(open_ai_client=openai, name='Angelicism Bangkok', gpt_3_model='curie:ft-personal:angelicism-2022-08-18-22-45-06', reply_frequency=10),
-	# 	DiscordBot(open_ai_client=openai, name='Cornelius Kennington', gpt_3_model='curie:ft-personal:frogtwitter-2022-08-19-15-37-55', reply_frequency=10),
-	# 	DiscordHivemindBot(open_ai_client=openai, mongo_client=MongoClient(os.environ['MONGO_URI']), name='HIVEMIND', reply_frequency=10)
-	# ]
-
-	asyncio.set_event_loop(loop)
-
-	# for twitter_bot in twitter_bots:
-	# 	print('Starting Twitter bot: ' + twitter_bot.name)
-	# 	twitter_bot.start(loop)
+	for twitter_bot in twitter_bots:
+		print('Starting Twitter bot: ' + twitter_bot.name)
+		twitter_bot.start(loop)
 
 	for discord_bot in discord_bots:
 		print('Starting Discord bot: ' + discord_bot.name)
