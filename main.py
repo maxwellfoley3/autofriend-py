@@ -110,5 +110,5 @@ def start_twitter_stream(bots):
 	twitter_streaming_client.filter(expansions=['in_reply_to_user_id'], threaded=True)
 
 bots = start_bots(loop)
-start_twitter_stream(bots['twitter_bots'])
+# start_twitter_stream(bots['twitter_bots'])
 loop.run_forever()
