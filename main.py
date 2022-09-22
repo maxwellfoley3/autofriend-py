@@ -103,10 +103,12 @@ def start_twitter_stream(bots):
 	twitter_streaming_client = TweetResponder(os.environ['TWITTER_BEARER_TOKEN'], bots)
 
 	rules = twitter_streaming_client.get_rules()
-	rules_idxs = list(map(lambda rule: int(rule.id), rules.data))
-	twitter_streaming_client.delete_rules(rules_idxs)
+	if rules.data is not None:
+		rules_idxs = list(map(lambda rule: int(rule.id), rules.data))
+		twitter_streaming_client.delete_rules(rules_idxs)
 	
-	twitter_streaming_client.add_rules(tweepy.StreamRule(f'to:automilady') )
+	for bot in bots:
+		twitter_streaming_client.add_rules(tweepy.StreamRule(f'to:{bot.name}') )
 	twitter_streaming_client.filter(expansions=['in_reply_to_user_id'], threaded=True)
 
 bots = start_bots(loop)
