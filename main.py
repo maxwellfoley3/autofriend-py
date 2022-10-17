@@ -9,7 +9,7 @@ import tweepy
 import json 
 
 from bot.TwitterBot import TwitterBot
-from bot.DiscordBot import DiscordBot
+from bot.DiscordBot import DiscordBot, SINGLE_REPLY
 from bot.DiscordHivemindBot import DiscordHivemindBot
 from bot.Config import config
 
@@ -64,7 +64,8 @@ def start_bots(loop):
 				name=name,
 				gpt_3_model=bot['gpt3Model'],
 				reply_frequency=bot['replyFrequency'],
-				loop=loop
+				loop=loop,
+				reply_style=bot['replyStyle'] if bot['replyStyle'] else SINGLE_REPLY
 			))
 		asyncio.set_event_loop(loop)
 

@@ -13,7 +13,8 @@ MINUTE_LIMIT = 3
 ONE_MINUTE = 60
 
 HIVE_CHANNEL_ID = 1011005608931102812
-
+SINGLE_REPLY = 'single-reply'
+CONTEXT_REPLY = 'context-reply'
 class DiscordBot:
 	name = None
 	gpt_3_model = None
@@ -31,6 +32,7 @@ class DiscordBot:
 			intents=discord.Intents(messages=True, guilds=True)
 		)
 		self.__minute_count = { 'count': 0, 'minute': time.time() % ONE_MINUTE }
+		self.reply_style = kwargs['reply_style']
 
 	# Minute count = how much this account has tweeted in the last minute
 	# The variable is in the form { Minute: [num], count: [num] }
@@ -58,9 +60,11 @@ class DiscordBot:
 				lambda: self._open_ai_client.Completion.create(
 					engine=self.gpt_3_model, 
 					prompt=prompt,
-					temperature=0.7,
+					temperature=0.9,
 					max_tokens=54,
-					stop=['###']
+					frequency_penalty=2.0,
+					presence_penalty=2.0,
+					stop=['\n', '###']
 				), 
 				error_message_to_watch_for = 'That model is still being loaded. Please try again shortly.' 
 			)
@@ -76,9 +80,22 @@ class DiscordBot:
 	async def reply(self, message):
 		try:
 			message_text = message.content
+			channel = message.channel
+			if self.reply_style == SINGLE_REPLY:
+				prompt = f'Reply to: {message_text}'
+			elif self.reply_style == CONTEXT_REPLY:
+				prompt = ""
+				async for msg in channel.history(limit=15):
+					# print(msg)
+					# We need to reverse the order, it will return the most recent messages first
+					# Strip out the @mentions
+					prompt = msg.author.name + ": " + re.sub(r'<@.*>\s', '', msg.content) + "\n" + prompt
+				
+				prompt = "The following is a Discord conversation between multiple participants with distinct personalities:\n\n" + prompt
+				prompt+=self.name + ":"
+
 			print(f'Replying to {message_text} from {self.name}')
-			# Strip out the @mentions
-			response_text = await self.generate_response(re.sub(r'<@.*>\s', '', message_text))
+			response_text = await self.generate_response(prompt)
 			await message.reply(response_text)
 		except Exception as e:
 			print(f'{self.name} reply failed: {e}')
