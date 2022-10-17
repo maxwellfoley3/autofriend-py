@@ -3,6 +3,7 @@ import os
 import time
 import asyncio
 import random
+from enum import Enum
 
 import tweepy
 from bot.QualityFilters import tweet_has_complete_sentences, tweet_has_meaningful_words, tweet_passes_bad_word_check
@@ -14,6 +15,9 @@ HOURLY_LIMIT = 20
 ONE_HOUR = 60 * 60
 TEN_MINUTES = 60 * 10
 
+class PromptStyle(Enum):
+		BLANK = 1
+		DICTIONARY = 2
 class TwitterBot:
 	name = None
 	gpt_3_model = None
@@ -23,6 +27,7 @@ class TwitterBot:
 	__hour_count = None
 	follower_count = None
 	id = None
+	prompt_style = PromptStyle.BLANK
 
 	def __init__(self, **kwargs): # _open_ai_client, name, gpt_3_model, tweet_frequency):
 		name = kwargs['name']
@@ -41,6 +46,14 @@ class TwitterBot:
 		self.tweet_frequency = kwargs['tweet_frequency']
 		self.__hour_count = { 'hour': time.time() % ONE_HOUR, 'count': 0 }
 		self.follower_count = 0
+
+		# Prompt style
+		if 'promptStyle' in config['twitter'][name]:
+			if config['twitter'][name]['promptStyle'] == 'dictionary':
+				self.prompt_style = PromptStyle.DICTIONARY
+			else:
+				self.prompt_style = PromptStyle.BLANK
+
 		try:
 			me = self._twitter_client.get_me()
 		except Exception as e:
@@ -53,7 +66,7 @@ class TwitterBot:
 		async def tweet_regularly():
 			self.tweet()
 			await asyncio.sleep(self.tweet_frequency)
-			tweet_regularly()
+			await tweet_regularly()
 		loop.create_task(tweet_regularly())
 
 	# Hour count = how much this account has tweeted in the last hour
@@ -74,9 +87,12 @@ class TwitterBot:
 	def tweet(self):
 		try:
 			if not self.update_hour_count_and_check_is_limit_reached():
-				# Prompt with random word from the dictionary
-				# TODO: allow flexiblity for different prompt formats for different models
-				tweet_text = self.generate_response(random.choice(WORDS)+'###')
+				prompt = "###"
+				if self.prompt_style == PromptStyle.DICTIONARY:
+					# Prompt with random word from the dictionary
+					prompt = random.choice(WORDS)+'###'
+					
+				tweet_text = self.generate_response(prompt)
 				print(f'{self.name} tweeting: {tweet_text}')
 				return self._twitter_client.create_tweet(text=tweet_text)
 		except Exception as e:
