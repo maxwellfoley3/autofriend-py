@@ -1,0 +1,20 @@
+.BotSettings {
+	padding: 2em;
+
+	button.big {
+		font-size: 20px;
+		padding: .5em;
+	}
+
+	input.number-input {
+		width: 4em;
+	}
+
+	li {
+		margin-bottom:1em;
+	}
+	li > div {
+		margin-left:2em;
+		padding:.4em;
+	}
+}

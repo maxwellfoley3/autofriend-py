@@ -1,0 +1,36 @@
+@use './App.scss';
+
+.LoginPage {
+	background-color:black;
+	max-width: 600px;
+	margin: auto;
+	padding: 2em;
+	border-radius: 1em;
+	&:hover {
+		border: 1px solid App.$harmless-yellow;
+	}
+
+	li {
+		padding: .3em;
+		list-style: none;
+	}
+
+	label {
+		display: inline-block;
+		width: 10em;
+	}
+
+	.header {
+		h1 {
+			margin-bottom:0em;
+		}
+		h5 { 
+			font-weight:normal;
+			margin-top:0em;
+			margin-bottom:0em;
+		}
+		margin-bottom:1em;
+    border-bottom: 1px solid App.$harmless-yellow;
+  }
+
+}

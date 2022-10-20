@@ -1,0 +1,18 @@
+.GptTest {
+	padding: 20px;
+
+	.public-DraftEditor-content {
+		height:300px;
+		overflow:auto;
+		color:black;
+		padding: .5em;
+		background-color:white;
+	}
+
+	button {
+		margin-top: 1em;
+		margin-left: auto;
+		font-size: 18px;
+		padding: .5em;
+	}
+}

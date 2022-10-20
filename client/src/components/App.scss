@@ -1,0 +1,40 @@
+$assetPath :"../../public/images";
+
+html, body {
+  background-color: #555;
+}
+
+$harmless-yellow: rgb(255, 200, 0);
+
+.App {
+  padding: 20px;
+  color: $harmless-yellow;
+
+  a {
+    color: $harmless-yellow;
+    cursor: pointer;
+  }
+
+  input {
+    background-color: $harmless-yellow;
+    outline: none;
+    border: none;
+    border: 1px solid $harmless-yellow;
+  }
+
+  input:focus {
+    border: 1px solid white;
+  }
+
+  button {
+    color: $harmless-yellow;
+    border: 1px solid $harmless-yellow;
+    background-color: rgba(0, 0, 0, 0);
+  }
+
+  button:hover {
+    cursor: pointer;
+    background-color: $harmless-yellow;
+    color: black;
+  }
+}

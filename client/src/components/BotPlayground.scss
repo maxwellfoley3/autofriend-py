@@ -1,0 +1,12 @@
+@use './App.scss';
+ 
+.BotPlayground {
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	//justify-content: space-between;
+	> div {
+		background-color:#1a1a1a;
+		margin: 1em;
+	}
+}
